@@ -1,6 +1,0 @@
-@CyberAuthApi_HostAddress = http://localhost:5169
-
-GET {{CyberAuthApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
