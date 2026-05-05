@@ -1,6 +1,9 @@
 using System.Text;
 using Backend;
+using Backend.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using UserService;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +24,23 @@ builder.Services.AddAuthentication("Bearer")
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("UserOrAdmin", policy =>
+    {
+        policy.Requirements.Add(new UserOrAdminRequirement());
+    });
+    options.AddPolicy("AdminWorkingHours", policy =>
+    {
+        policy.Requirements.Add(new WorkingHoursRequirement());
+    });
+});
+
+builder.Services.AddSingleton<IAuthorizationHandler, UserOrAdminHandler>();
+builder.Services.AddSingleton<IAuthorizationHandler, WorkingHoursHandler>();
+
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<Database>();
 
 WebApplication app = builder.Build();
 app.MapControllers();

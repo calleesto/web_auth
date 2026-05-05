@@ -8,5 +8,5 @@ public class User
     
     public string Password { get; set; } // Never store plain-text passwords like this in production
     
-    public string Role { get; set; }
+    public List<string> Roles { get; set; }
 }

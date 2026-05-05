@@ -31,9 +31,11 @@ Aplikacja implementuje mechanizm autoryzacji oparty na tokenach **JWT (JSON Web 
 
 Poniższa tabela przedstawia macierz uprawnień zaimplementowaną w systemie i testowaną za pomocą Swagger UI:
 
-| Funkcjonalność (Endpoint) | Gość (Niezalogowany) | Użytkownik (User) | Administrator (Admin) | Uwagi (Metoda)                       |
-| :--- |:--------------------:|:-----------------:|:---------------------:|:-------------------------------------|
-| `GET /public` |         200          |        200        |          200          | Brak autoryzacji                     |
-| `GET /user-profile` |         401          |        200        |         200         | **RBAC**                             |
-| `DELETE /user` |         401          |        403        |          200          | **RBAC** (Tylko Admin)               |
-| `POST /company-logs` |         401          |        403        |         200*          | **ABAC** (Tylko Admin + *godz. 8-16) |
+| Funkcjonalność (Endpoint) | Gość (Niezalogowany) | Użytkownik (User) | Administrator (Admin) | Uwagi (Metoda)                              |
+|:--------------------------|:--------------------:|:-----------------:|:---------------------:|:--------------------------------------------|
+| `GET api/public`          |         200          |        200        |          200          | Brak autoryzacji                            |
+| `GET api/user/{id}`       |         401          |        200        |          200          | **RBAC** + **ABAC** (user tylko dla siebie) |
+| `DELETE api/user{id}`     |         401          |        403        |          200          | **RBAC** (Tylko Admin)                      |
+| `POST /logs`              |         401          |        403        |         200*          | **ABAC** (Tylko Admin + *godz. 8-16)        |
+| `POST /login`             |         200*         |       200*        |         200*          | Autentykacja lub przedluzenie czasu tokenu  |
+| `POST /logout`            |         400*         |        200        |          200          | Brak autoryzacji                            |

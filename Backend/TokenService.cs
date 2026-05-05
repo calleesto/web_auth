@@ -21,12 +21,17 @@ public class TokenService
 
     public string GenerateToken(User user)
     {
-        Claim[] claims = new[]
+        List<Claim> claims =
+        [
+            new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new(ClaimTypes.Name, user.Username)
+        ];
+
+        foreach (string role in user.Roles)
         {
-            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new Claim(ClaimTypes.Name, user.Username),
-            new Claim(ClaimTypes.Role, user.Role)
-        };
+            Claim claim = new(ClaimTypes.Role, role);
+            claims.Add(claim);
+        }
 
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes(_secretKey));
         SigningCredentials creds = new(key, SecurityAlgorithms.HmacSha256);

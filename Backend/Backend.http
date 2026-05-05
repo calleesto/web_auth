@@ -8,20 +8,35 @@ Content-Type: application/json
   "Password": "haslo"
 }
 
-> {% client.global.set("auth_token", response.body.token); %}
+> {% client.global.set("auth_token_user", response.body.token); %}
 
 ###
-GET {{Backend_HostAddress}}/api/5
-Authorization: Bearer {{auth_token}}
+POST {{Backend_HostAddress}}/api/login
+Content-Type: application/json
+
+{
+  "Username": "Bartek",
+  "Password": "Password"
+}
+
+> {% client.global.set("auth_token_admin", response.body.token); %}
 
 ###
-GET {{Backend_HostAddress}}/api
-Authorization: Bearer {{auth_token}}
+GET {{Backend_HostAddress}}/api/user/0
+Authorization: Bearer {{auth_token_user}}
 
 ###
-GET {{Backend_HostAddress}}/api/5
-Authorization: Bearer aaaaa
+GET {{Backend_HostAddress}}/api/user/1
+Authorization: Bearer {{auth_token_user}}
 
 ###
-GET {{Backend_HostAddress}}/api
-Authorization: Bearer aaaaa
+GET {{Backend_HostAddress}}/api/user/0
+Authorization: Bearer {{auth_token_admin}}
+
+###
+GET {{Backend_HostAddress}}/api/user/1
+Authorization: Bearer {{auth_token_admin}}
+
+###
+POST {{Backend_HostAddress}}/api/logs
+Authorization: Bearer {{auth_token_admin}}

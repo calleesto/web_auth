@@ -6,11 +6,45 @@ public class Database
 
     public Database()
     {
-        Users = [];
+        Users = [
+            new User
+            {
+                Id = 0,
+                Username = "Bartek",
+                Password = "Password",
+                Roles = ["admin", "user"]
+            }
+            ,
+            new User
+            {
+                Id = 1,
+                Username = "Aneta",
+                Password = "haslo",
+                Roles = ["user"]
+            }
+        ];
     }
 
-    public User GetUser(string username, string password)
+    public User? GetUserLogin(string username, string password)
     {
-        return Users.First(user => user.Username == username && user.Password == password);
+        return Users.FirstOrDefault(user => user.Username == username && user.Password == password);
+    }
+    
+    public User GetUserById(int id)
+    {
+        User user = Users.First(user => user.Id == id);
+        user.Password = "";
+        return user;
+    }
+    
+    public List<User> GetUsers()
+    {
+        return Users;
+    }
+    
+    public User DeleteUser(User user)
+    {
+        Users.Remove(user);
+        return user;
     }
 }
