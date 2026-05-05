@@ -1,6 +1,27 @@
 @Backend_HostAddress = http://localhost:9002
 
-GET {{Backend_HostAddress}}/weatherforecast/
-Accept: application/json
+POST {{Backend_HostAddress}}/api/login
+Content-Type: application/json
+
+{
+  "Username": "Aneta",
+  "Password": "haslo"
+}
+
+> {% client.global.set("auth_token", response.body.token); %}
 
 ###
+GET {{Backend_HostAddress}}/api/5
+Authorization: Bearer {{auth_token}}
+
+###
+GET {{Backend_HostAddress}}/api
+Authorization: Bearer {{auth_token}}
+
+###
+GET {{Backend_HostAddress}}/api/5
+Authorization: Bearer aaaaa
+
+###
+GET {{Backend_HostAddress}}/api
+Authorization: Bearer aaaaa
