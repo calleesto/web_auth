@@ -36,6 +36,19 @@ builder.Services.AddAuthorization(options =>
     });
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.
+            WithOrigins(builder.Configuration["ApiSettings:CorsOrigins"]!).
+            //AllowAnyOrigin().
+            AllowAnyHeader().
+            AllowAnyMethod().
+            AllowCredentials();
+    });
+});
+
 builder.Services.AddSingleton<IAuthorizationHandler, UserOrAdminHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, WorkingHoursHandler>();
 
@@ -44,6 +57,8 @@ builder.Services.AddScoped<Database>();
 
 WebApplication app = builder.Build();
 app.MapControllers();
+
+app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
