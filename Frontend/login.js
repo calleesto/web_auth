@@ -1,4 +1,4 @@
-import {  } from "./common"
+import { FrontAddress } from "./common"
 
 async function login() {
     let login = document.getElementById('username');
@@ -7,7 +7,7 @@ async function login() {
     let l = login.value;
     let p = password.value;
 
-    url = HostAddress + "/api/login"
+    let url = HostAddress + "/api/login"
     const params = {
         Username: l,
         Password: p
