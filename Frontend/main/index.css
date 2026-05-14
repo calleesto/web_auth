@@ -1,0 +1,33 @@
+body {
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100vw;
+    height: 10vh;
+    background-color: #449EDA;
+    position: sticky;
+    top: 0;
+}
+.header > h1 {
+    margin-left:3vw;
+}
+
+.header > button {
+    padding-left:0.5vw;
+    padding-right:0.5vw;
+    font-size: 20px;
+    margin-right: 3vw;
+    background-color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+
+
+.main {
+
+}
