@@ -7,19 +7,40 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
+    <!--Test: "POST /login" && "POST /logout"-->
     <header class="header">
         <h1 class="title">web_auth</h1>
         <button id="logInOrOutBtn" onClick="loginButtonLogic()">Log In</button>
     </header>
 
     <main class="main">
-<!--        <button onclick="logout()">logout</button>-->
-<!--        <a href="../login/login.html">login</a>-->
+        <!--Test: "GET /api/public"-->
+        <div id="publicTest">
+            <ul>
+                <li></li> <!-- public value 1-->
+                <li></li> <!-- public value 2-->
+            </ul>
+        </div>
 
-<!--        <div id="data"></div>-->
 
-<!--        <button onclick="showPublic()">test</button>-->
+        <div id="profileFetcher"> <!-- admins can fetch all ids; regular users only their own-->
+            <input type="text" id="idFetchInput">
+            <button id="getProfile"></button>
+            <p id="fetchOutput" class="output"></p> <!--shows either profile info json or 403 forbidden error-->
+        </div>
+
+        <!--Test: "DELETE /api/user/{id}"-->
+        <div id="adminDelete">
+            <input type="text" id="idDeleteInput">
+            <button id="deleteProfile"></button>
+            <p id="deleteOutput" class="output"></p> <!--shows either profile delete success message or 403 forbidden error-->
+        </div>
+
+        <!--Test: "POST /api/logs"-->
+        <div id="submitLogs">
+            <button id="submitLogsBtn"></button>
+            <p id="logsOutput" class="output"></p> <!--must be admin and server hour between StartHour and EndHour or 403 forbidden error-->
+        </div>
     </main>
 
     <script src="index.js"></script>

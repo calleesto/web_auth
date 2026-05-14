@@ -2,6 +2,9 @@ body {
     font-family: 'Inter', system-ui, sans-serif;
 }
 
+
+/* HEADER CSS */
+
 .header {
     display: flex;
     align-items: center;
@@ -27,6 +30,7 @@ body {
 }
 
 
+/* MAIN CSS */
 
 .main {
 
