@@ -24,7 +24,8 @@ public class TokenService
         List<Claim> claims =
         [
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            new(ClaimTypes.Name, user.Username)
+            new(ClaimTypes.Name, user.Name),
+            new (ClaimTypes.Email, user.Email)
         ];
 
         foreach (string role in user.Roles)

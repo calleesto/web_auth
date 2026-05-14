@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
+using UserService;
 
 namespace Backend.Controllers;
 
@@ -9,6 +10,15 @@ namespace Backend.Controllers;
 [ApiController]
 public class GoogleAuthController : ControllerBase
 {
+    private readonly TokenService _tokenService;
+    private readonly Database _database;
+    
+    public GoogleAuthController(TokenService tokenService, Database database)
+    {
+        _tokenService = tokenService;
+        _database = database;
+    }
+    
     [HttpGet("login-google")]
     public IActionResult LoginGoogle()
     {
@@ -23,19 +33,30 @@ public class GoogleAuthController : ControllerBase
     [HttpGet("google-callback")]
     public async Task<IActionResult> GoogleCallback()
     {
-        AuthenticateResult result = await HttpContext.AuthenticateAsync();
+        AuthenticateResult result = await HttpContext.AuthenticateAsync("External");
 
         if (!result.Succeeded)
         {
             return Unauthorized();
         }
 
-        IEnumerable<Claim> claims = result.Principal!.Identities.First().Claims;
+        ClaimsPrincipal principal = result.Principal!;
 
-        return Ok(claims.Select(c => new
+        string email = principal.FindFirst(ClaimTypes.Email)!.Value;
+        string name = principal.FindFirst(ClaimTypes.Name)!.Value;
+
+        User? user = _database.GetUserByEmail(email);
+
+        if (user == null)
         {
-            c.Type,
-            c.Value
-        }));
+            user = _database.CreateGoogleUser(name, email);
+        }
+
+        string jwt = _tokenService.GenerateToken(user);
+
+        return Ok(new
+        {
+            token = jwt
+        });
     }
 }

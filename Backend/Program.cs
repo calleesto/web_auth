@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using UserService;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -13,14 +14,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddAuthentication(options =>
     {
-        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
-    })
-    .AddCookie()
-    .AddGoogle(options =>
-    {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer("Bearer", options =>
     {
@@ -34,8 +29,14 @@ builder.Services.AddAuthentication(options =>
             ValidAudience = builder.Configuration["ApiSettings:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]!))
         };
-    }
-);
+    })
+    .AddCookie("External")
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"]!;
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"]!;
+        options.SignInScheme = "External";
+    });
 
 builder.Services.AddAuthorization(options =>
 {
@@ -66,6 +67,7 @@ builder.Services.AddSingleton<IAuthorizationHandler, WorkingHoursHandler>();
 
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<Database>();
+builder.Services.AddScoped<LoggedUsers>();
 
 WebApplication app = builder.Build();
 app.MapControllers();

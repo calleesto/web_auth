@@ -10,11 +10,13 @@ public class UsersController : ControllerBase
 {
     private readonly TokenService _tokenService;
     private readonly Database _database;
+    private readonly LoggedUsers _loggedUsers;
 
-    public UsersController(TokenService tokenService, Database database)
+    public UsersController(TokenService tokenService, Database database, LoggedUsers loggedUsers)
     {
         _tokenService = tokenService;
         _database = database;
+        _loggedUsers = loggedUsers;
     }
     
     // GET: api/public
@@ -61,6 +63,8 @@ public class UsersController : ControllerBase
         }
         
         string token = _tokenService.GenerateToken(user);
+        
+        _loggedUsers.RegisterLogin(user);
 
         return Ok(new { token });
     }
@@ -74,6 +78,8 @@ public class UsersController : ControllerBase
         }
         
         // todo implement
+        //_loggedUsers.RegisterLogin(User.Claims);
+        
         return Ok();
     }
 }

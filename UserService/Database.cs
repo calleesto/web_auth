@@ -7,27 +7,29 @@ public class Database
     public Database()
     {
         Users = [
-            new User
-            {
-                Id = 0,
-                Username = "Bartek",
-                Password = "Password",
-                Roles = ["admin", "user"]
-            }
-            ,
-            new User
-            {
-                Id = 1,
-                Username = "Aneta",
-                Password = "haslo",
-                Roles = ["user"]
-            }
+            new User(
+                "Bartek",
+                "bartus@email.com",
+                "Password",
+                ["admin", "user"]
+            ),
+            new User (
+                "Aneta",
+                "anetka@email.com",
+                "haslo",
+                ["user"]
+            )
         ];
     }
 
     public User? GetUserLogin(string username, string password)
     {
-        return Users.FirstOrDefault(user => user.Username == username && user.Password == password);
+        User? user = Users.FirstOrDefault(user =>
+                user.Name == username &&
+                BCrypt.Net.BCrypt.Verify(password, user.Password)
+            );
+        
+        return user;
     }
     
     public User GetUserById(int id)
@@ -35,6 +37,11 @@ public class Database
         User user = Users.First(user => user.Id == id);
         user.Password = "";
         return user;
+    }
+
+    public User? GetUserByEmail(string email)
+    {
+        return Users.FirstOrDefault(user => user.Email == email);
     }
     
     public List<User> GetUsers()
@@ -45,6 +52,18 @@ public class Database
     public User DeleteUser(User user)
     {
         Users.Remove(user);
+        return user;
+    }
+
+    public User CreateGoogleUser(string name, string email)
+    {
+        User user = new (
+            name,
+            email,
+            "",
+            ["user"]
+        );
+        Users.Add(user);
         return user;
     }
 }
