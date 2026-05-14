@@ -20,7 +20,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["ApiSettings:Issuer"],
             ValidAudience = builder.Configuration["ApiSettings:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["ApiSettings:Secret"]!))
         };
     });
 
@@ -42,7 +42,6 @@ builder.Services.AddCors(options =>
     {
         policy.
             WithOrigins(builder.Configuration["ApiSettings:CorsOrigins"]!).
-            //AllowAnyOrigin().
             AllowAnyHeader().
             AllowAnyMethod().
             AllowCredentials();

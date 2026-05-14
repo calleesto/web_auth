@@ -47,6 +47,7 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "AdminWorkingHours")]
     public IActionResult Logs()
     {
+        // todo implement
         return Ok();
     }
     
@@ -71,6 +72,8 @@ public class UsersController : ControllerBase
         {
             return BadRequest("Not logged in");
         }
+        
+        // todo implement
         return Ok();
     }
 }
