@@ -11,7 +11,7 @@ public class UsersController : ControllerBase
     private readonly TokenService _tokenService;
     private readonly Database _database;
 
-    public UsersController(TokenService tokenService, Database database, IConfiguration configuration)
+    public UsersController(TokenService tokenService, Database database)
     {
         _tokenService = tokenService;
         _database = database;
