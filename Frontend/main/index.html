@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!--Test: "POST /login" && "POST /logout"-->
+    <!--Test: "POST /login" && "POST /logout" && "GET /auth/login-google" && "GET /auth/logout-google"-->
     <header class="header">
         <h1 class="title">web_auth</h1>
         <button id="logInOrOutBtn" onClick="loginButtonLogic()">Log In</button>
@@ -15,32 +15,39 @@
 
     <main class="main">
         <!--Test: "GET /api/public"-->
-        <div id="publicTest">
+        <section id="publicTest">
+            <h2>Public Data</h2>
+            <p class="section-description">Information available without logging in.</p>
             <ul>
                 <li></li> <!-- public value 1-->
                 <li></li> <!-- public value 2-->
             </ul>
-        </div>
+        </section>
 
-
-        <div id="profileFetcher"> <!-- admins can fetch all ids; regular users only their own-->
-            <input type="text" id="idFetchInput">
-            <button id="getProfile"></button>
+        <section id="profileFetcher"> <!-- admins can fetch all ids; regular users only their own-->
+            <h2>Fetch Profile</h2>
+            <p class="section-description">Enter a user ID to view profile information.</p>
+            <input type="number" min="0" step="1" placeholder="Enter user ID" id="idFetchInput" required>
+            <button id="getProfile">Get Profile</button>
             <p id="fetchOutput" class="output"></p> <!--shows either profile info json or 403 forbidden error-->
-        </div>
+        </section>
 
         <!--Test: "DELETE /api/user/{id}"-->
-        <div id="adminDelete">
-            <input type="text" id="idDeleteInput">
-            <button id="deleteProfile"></button>
+        <section id="adminDelete">
+            <h2>Delete User</h2>
+            <p class="section-description">Admin-only action for removing a user profile.</p>
+            <input type="number" min="0" step="1" placeholder="Enter user ID" id="idDeleteInput" required>
+            <button id="deleteProfile">Delete Profile</button>
             <p id="deleteOutput" class="output"></p> <!--shows either profile delete success message or 403 forbidden error-->
-        </div>
+        </section>
 
         <!--Test: "POST /api/logs"-->
-        <div id="submitLogs">
-            <button id="submitLogsBtn"></button>
+        <section id="submitLogs">
+            <h2>Submit Logs</h2>
+            <p class="section-description">Submit server logs if your account has permission.</p>
+            <button id="submitLogsBtn">Submit Logs</button>
             <p id="logsOutput" class="output"></p> <!--must be admin and server hour between StartHour and EndHour or 403 forbidden error-->
-        </div>
+        </section>
     </main>
 
     <script src="index.js"></script>
