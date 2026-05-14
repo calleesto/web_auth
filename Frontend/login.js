@@ -1,4 +1,7 @@
-import { FrontAddress } from "./common"
+//import { FrontAddress } from "./common"
+
+const FrontAddress = "http://localhost:63343"
+const BackAddress = "http://localhost:9002"
 
 async function login() {
     let login = document.getElementById('username');
@@ -7,7 +10,7 @@ async function login() {
     let l = login.value;
     let p = password.value;
 
-    let url = HostAddress + "/api/login"
+    let url = BackAddress + "/api/login"
     const params = {
         Username: l,
         Password: p
@@ -23,6 +26,6 @@ async function login() {
         .then( response => response.json() )
         .then( response => {
             localStorage.setItem("token", response.token);
-            window.location.href = FrontAddress + "index.html";
+            window.location.href = FrontAddress + "/index.html";
         } );
 }
