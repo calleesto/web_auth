@@ -1,41 +1,38 @@
-# Temat 17: Autoryzacja w aplikacjach webowych
+# Authorization in Web Applications
 
-## 1. Wybór środowiska programistycznego, języka i frameworku
+## 1. Choice of Development Environment, Language, and Framework
 
-Do realizacji projektu wybraliśmy technologie zapewniające wysoki poziom bezpieczeństwa "out-of-the-box" oraz pozwalające na pełną separację warstw (Frontend/Backend):
+For this project, we chose technologies that provide a high level of security "out-of-the-box" and allow for a full separation of layers (Frontend/Backend):
 
-* **Backend:** C# 12 / .NET 10, ASP.NET Core Web API (standard branżowy dla bezpiecznych usług backendowych).
-* **Frontend:** Vanilla HTML/JavaScript z wykorzystaniem Fetch API do obsługi asynchronicznych żądań i nagłówków autoryzacyjnych.
-* **Dokumentacja i Testy:** Swagger UI (OpenAPI) dla backendu, interaktywny dashboard w przeglądarce dla frontendu.
-* **IDE:** JetBrains Rider / Visual Studio Code.
-* **Kontrola wersji:** Git (GitHub).
+* **Backend:** C# 12 / .NET 10, ASP.NET Core Web API (the industry standard for secure backend services).
+* **Frontend:** HTML / CSS / JavaScript utilizing the Fetch API to handle asynchronous requests and authorization headers.
 
-## 2. Przegląd metod kontroli dostępu w systemach IT
+## 2. Overview of Access Control Methods in IT Systems
 
-1. **RBAC (Role-Based Access Control):** Dostęp oparty na rolach (np. Admin, User). Uprawnienia są przypisane do funkcji w systemie, a nie do konkretnych osób.
-2. **ABAC (Attribute-Based Access Control / Dynamic-RBAC):** Dostęp oparty na atrybutach (kontekstowy). Decyzja zapada na podstawie cech użytkownika, czasu lub miejsca (np. "tylko w godzinach pracy" lub "dostęp tylko do własnych danych").
-3. **DAC (Discretionary Access Control):** Kontrola uznaniowa. Właściciel danego zasobu sam decyduje, kogo do niego dopuścić (np. udostępnianie folderu).
-4. **MAC (Mandatory Access Control):** Kontrola obowiązkowa. Restrykcyjny system etykiet bezpieczeństwa (np. systemy wojskowe), gdzie system odgórnie narzuca dostęp.
+1. **RBAC (Role-Based Access Control):** Access based on roles (e.g., Admin, User). Permissions are assigned to functions in the system, rather than to specific individuals.
+2. **ABAC (Attribute-Based Access Control / Dynamic-RBAC):** Contextual, attribute-based access. Decisions are made based on user characteristics, time, or location (e.g., "only during working hours" or "access only to personal data").
+3. **DAC (Discretionary Access Control):** Discretionary control. The owner of a specific resource decides who is granted access to it (e.g., sharing a file folder).
+4. **MAC (Mandatory Access Control):** Mandatory control. A restrictive system of security labels (e.g., military systems) where the system dictates access from the top down.
 
-**W projekcie zaimplementowano modele RBAC oraz ABAC.** Dodatkowo zintegrowano standard **OAuth2**, umożliwiając logowanie przy użyciu konta Google (SSO).
+**This project implements the RBAC and ABAC models.** Additionally, the **OAuth2** standard has been integrated, enabling Single Sign-On (SSO) using a Google account.
 
-## 3. Implementacja aplikacji do celów demonstracyjnych
+## 3. Implementation of the Application for Demonstration Purposes
 
-Aplikacja implementuje mechanizm autoryzacji oparty na tokenach **JWT (JSON Web Token)** oraz plikach cookie (dla integracji z Google).
-* Serwer sprawdza tożsamość użytkownika.
-* Wystawia zaszyfrowany token JWT zawierający "Claims" (twierdzenia) o roli (np. `admin`) i identyfikatorze użytkownika (`NameIdentifier`).
-* Przy każdym zapytaniu serwer weryfikuje token i decyduje o przyznaniu dostępu (**200 OK**) lub odmowie ze względu na brak autentykacji (**401 Unauthorized**) albo brak autoryzacji/uprawnień (**403 Forbidden**).
+The application implements an authorization mechanism based on **JWT (JSON Web Tokens)** and cookies (for Google integration).
+* The server verifies the user's identity.
+* It issues an encrypted JWT token containing "Claims" about the user's role (e.g., `admin`) and identifier (`NameIdentifier`).
+* With every request, the server verifies the token and decides whether to grant access (**200 OK**) or deny it due to lack of authentication (**401 Unauthorized**) or lack of authorization/permissions (**403 Forbidden**).
 
-## 4. Demonstracja różnych możliwości korzystania z aplikacji
+## 4. Demonstration of Application Usage Scenarios
 
-Poniższa tabela przedstawia precyzyjną macierz uprawnień zaimplementowaną w systemie. Zwraca ona szczególną uwagę na rozróżnienie błędów uwierzytelniania (401) i autoryzacji (403):
+The table below presents the precise permission matrix implemented in the system. It pays special attention to the distinction between authentication errors (401) and authorization errors (403):
 
-| Funkcjonalność (Endpoint) | Gość (Niezalogowany) | Użytkownik (User) | Administrator (Admin) | Uwagi (Metoda / Wymagania) |
+| Functionality (Endpoint) | Guest (Not logged in) | User | Administrator (Admin) | Notes (Method / Requirements) |
 | :--- | :---: | :---: | :---: | :--- |
-| `GET api/public` | 200 | 200 | 200 | Brak autoryzacji. Otwarty dostęp dla wszystkich. |
-| `GET api/user/{id}` | 401 | **200** (własne ID)<br>**403** (cudze ID) | 200 | **RBAC + ABAC:** Użytkownik ma dostęp tylko do swojego zasobu. Admin ma dostęp do wszystkich. |
-| `DELETE api/user/{id}` | 401 | 403 | 200 | **RBAC:** Ścisły wymóg posiadania roli `admin`. |
-| `POST api/logs` | 401 | 403 | **200** (godz. 8-16)<br>**403** (inne godz.) | **RBAC + ABAC:** Wymaga roli `admin` **ORAZ** akcji w wyznaczonych godzinach pracy serwera. |
-| `POST /login` | 200 | 200 | 200 | Autentykacja tradycyjna: weryfikacja bazy danych i wydanie tokenu JWT. |
-| `GET /auth/login-google` | 302 -> 200 | - | - | **OAuth2:** Przekierowanie do serwerów Google i wydanie Claims po poprawnym Callbacku. |
-| `POST /logout` | 400 | 200 | 200 | Wymaga aktywnej sesji (tokenu), inaczej serwer zwraca `400 Bad Request`. |
+| `GET api/public` | 200 | 200 | 200 | No authorization required. Open access for everyone. |
+| `GET api/user/{id}` | 401 | **200** (own ID)<br>**403** (other ID) | 200 | **RBAC + ABAC:** User only has access to their own resource. Admin has access to all. |
+| `DELETE api/user/{id}` | 401 | 403 | 200 | **RBAC:** Strict requirement of the `admin` role. |
+| `POST api/logs` | 401 | 403 | **200** (hours 8-16)<br>**403** (other hours) | **RBAC + ABAC:** Requires the `admin` role **AND** the action must occur during designated server working hours. |
+| `POST /login` | 200 | 200 | 200 | Traditional authentication: database verification and JWT issuance. |
+| `GET /auth/login-google` | 302 -> 200 | - | - | **OAuth2:** Redirect to Google servers and issuance of Claims after a successful Callback. |
+| `POST /logout` | 400 | 200 | 200 | Requires an active session (token), otherwise the server returns `400 Bad Request`. |
