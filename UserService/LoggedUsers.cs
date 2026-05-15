@@ -2,21 +2,16 @@
 
 public class LoggedUsers
 {
-    public List<int> LoggedIds { get; set; }
-
-    public LoggedUsers()
-    {
-        LoggedIds = [];
-    }
+    private static List<int> loggedIds = [];
 
     public void RegisterLogin(User user)
     {
-        LoggedIds.Add(user.Id);
+        loggedIds.Add(user.Id);
     }
 
-    public void RegisterLogout(User user)
+    public void RegisterLogout(int id)
     {
-        int result = LoggedIds.RemoveAll(id => id == user.Id);
+        int result = loggedIds.RemoveAll(i => i == id);
 
         if (result != 1)
         {
@@ -26,8 +21,6 @@ public class LoggedUsers
     
     public int GetStatus()
     {
-        return LoggedIds.Count;
+        return loggedIds.Count;
     }
-    
-    
 }

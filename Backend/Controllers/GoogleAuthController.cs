@@ -12,11 +12,13 @@ public class GoogleAuthController : ControllerBase
 {
     private readonly TokenService _tokenService;
     private readonly Database _database;
+    private readonly LoggedUsers _loggedUsers;
     
-    public GoogleAuthController(TokenService tokenService, Database database)
+    public GoogleAuthController(TokenService tokenService, Database database, LoggedUsers loggedUsers)
     {
         _tokenService = tokenService;
         _database = database;
+        _loggedUsers = loggedUsers;
     }
     
     [HttpGet("login-google")]

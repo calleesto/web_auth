@@ -49,8 +49,7 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "AdminWorkingHours")]
     public IActionResult Logs()
     {
-        // todo implement
-        return Ok();
+        return Ok(_loggedUsers.GetStatus());
     }
     
     [HttpPost("login")]
@@ -77,8 +76,7 @@ public class UsersController : ControllerBase
             return BadRequest("Not logged in");
         }
         
-        // todo implement
-        //_loggedUsers.RegisterLogin(User.Claims);
+        _loggedUsers.RegisterLogout(int.Parse(User.Claims.ToList()[0].Value));
         
         return Ok();
     }
