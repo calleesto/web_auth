@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService;
 
@@ -6,21 +7,23 @@ namespace Backend.Controllers;
 
 [Route("api/")]
 [ApiController]
+[Authorize]
 public class UsersController : ControllerBase
 {
     private readonly TokenService _tokenService;
-    private readonly Database _database;
+    private readonly InMemoryDatabase inMemoryDatabase;
     private readonly LoggedUsers _loggedUsers;
 
-    public UsersController(TokenService tokenService, Database database, LoggedUsers loggedUsers)
+    public UsersController(TokenService tokenService, InMemoryDatabase inMemoryDatabase, LoggedUsers loggedUsers)
     {
         _tokenService = tokenService;
-        _database = database;
+        this.inMemoryDatabase = inMemoryDatabase;
         _loggedUsers = loggedUsers;
     }
     
     // GET: api/public
     [HttpGet("public")]
+    [AllowAnonymous]
     public IEnumerable<string> Get()
     {
         return ["Public value 1", "Public value 2"];
@@ -31,7 +34,8 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "UserOrAdmin")]
     public IActionResult Get(int id)
     {
-        User user = _database.GetUserById(id);
+        User user = inMemoryDatabase.GetUserById(id);
+        UserDto userDto = new(user);
         return Ok(user);
     }
 
@@ -40,8 +44,8 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin")]
     public IActionResult Delete(int id)
     {
-        User user = _database.GetUserById(id);
-        _database.DeleteUser(user);
+        User user = inMemoryDatabase.GetUserById(id);
+        inMemoryDatabase.DeleteUser(user);
         return NoContent();
     }
 
@@ -53,9 +57,10 @@ public class UsersController : ControllerBase
     }
     
     [HttpPost("login")]
+    [AllowAnonymous]
     public IActionResult Login([FromBody] LoginRequest request)
     {
-        User? user = _database.GetUserLogin(request.Username, request.Password);
+        User? user = inMemoryDatabase.GetUserLogin(request.Username, request.Password);
         if (user == null)
         {
             return Unauthorized("Invalid credentials");
@@ -71,12 +76,8 @@ public class UsersController : ControllerBase
     [HttpPost("logout")]
     public IActionResult Logout()
     {
-        if (!User.Identity!.IsAuthenticated)
-        {
-            return BadRequest("Not logged in");
-        }
-        
-        _loggedUsers.RegisterLogout(int.Parse(User.Claims.ToList()[0].Value));
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+        _loggedUsers.RegisterLogout(int.Parse(userId));
         
         return Ok();
     }

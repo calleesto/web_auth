@@ -1,10 +1,10 @@
 ﻿namespace UserService;
 
-public class Database
+public class InMemoryDatabase
 {
     public List<User> Users { get; set; }
 
-    public Database()
+    public InMemoryDatabase()
     {
         Users = [
             new User(

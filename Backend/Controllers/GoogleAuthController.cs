@@ -11,13 +11,13 @@ namespace Backend.Controllers;
 public class GoogleAuthController : ControllerBase
 {
     private readonly TokenService _tokenService;
-    private readonly Database _database;
+    private readonly InMemoryDatabase inMemoryDatabase;
     private readonly LoggedUsers _loggedUsers;
     
-    public GoogleAuthController(TokenService tokenService, Database database, LoggedUsers loggedUsers)
+    public GoogleAuthController(TokenService tokenService, InMemoryDatabase inMemoryDatabase, LoggedUsers loggedUsers)
     {
         _tokenService = tokenService;
-        _database = database;
+        this.inMemoryDatabase = inMemoryDatabase;
         _loggedUsers = loggedUsers;
     }
     
@@ -47,13 +47,13 @@ public class GoogleAuthController : ControllerBase
         string email = principal.FindFirst(ClaimTypes.Email)!.Value;
         string name = principal.FindFirst(ClaimTypes.Name)!.Value;
 
-        User? user = _database.GetUserByEmail(email);
+        User? user = inMemoryDatabase.GetUserByEmail(email);
 
         if (user == null)
         {
-            user = _database.CreateGoogleUser(name, email);
-            _loggedUsers.RegisterLogin(user);
+            user = inMemoryDatabase.CreateGoogleUser(name, email);
         }
+        _loggedUsers.RegisterLogin(user);
 
         string jwt = _tokenService.GenerateToken(user);
 

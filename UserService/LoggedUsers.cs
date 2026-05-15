@@ -2,7 +2,7 @@
 
 public class LoggedUsers
 {
-    private static List<int> loggedIds = [];
+    private static HashSet<int> loggedIds = [];
 
     public void RegisterLogin(User user)
     {
@@ -11,12 +11,7 @@ public class LoggedUsers
 
     public void RegisterLogout(int id)
     {
-        int result = loggedIds.RemoveAll(i => i == id);
-
-        if (result != 1)
-        {
-            throw new Exception("Too much data deleted");
-        }
+        loggedIds.Remove(id);
     }
     
     public int GetStatus()
