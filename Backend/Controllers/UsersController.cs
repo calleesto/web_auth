@@ -36,7 +36,7 @@ public class UsersController : ControllerBase
     {
         User user = inMemoryDatabase.GetUserById(id);
         UserDto userDto = new(user);
-        return Ok(user);
+        return Ok(userDto);
     }
 
     // DELETE api/user/5
