@@ -52,6 +52,7 @@ public class GoogleAuthController : ControllerBase
         if (user == null)
         {
             user = _database.CreateGoogleUser(name, email);
+            _loggedUsers.RegisterLogin(user);
         }
 
         string jwt = _tokenService.GenerateToken(user);
