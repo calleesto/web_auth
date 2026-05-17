@@ -17,7 +17,6 @@ async function logout() {
         fetch( url, options )
             .then( response => response.json() )
             .then( response => {
-                // todo do smth more
                 console.log( response );
                 localStorage.removeItem("token");
             } );
