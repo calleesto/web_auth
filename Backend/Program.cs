@@ -1,10 +1,9 @@
 using System.Text;
 using Backend;
 using Backend.Authorization;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using UserService;
 
@@ -15,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
     })
     .AddJwtBearer("Bearer", options =>
     {
@@ -73,7 +72,7 @@ WebApplication app = builder.Build();
 app.MapControllers();
 
 app.UseCors();
-
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
