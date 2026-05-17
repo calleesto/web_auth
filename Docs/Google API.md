@@ -2,6 +2,10 @@
 
 ---
 
+W tym poradniku dowiesz się jak stworzyć i skonfigurować nowy projekt w celu uruchmienia Google OAuth API.
+
+---
+
 # Wymagania
 
 - Konto Google
@@ -16,68 +20,60 @@ Wejdź na [stronę google cloud](https://console.cloud.google.com/):
 
 ## Kroki
 
-1. Kliknij **Select Project** (wybierz projekt)
-2. Kliknij **New Project** (nowy projekt)
+1. Kliknij **Wybierz projekt** (Select Project)
+2. Kliknij **Nowy projekt** (New Project)
    ![Select page](./assets/GoogleCloudSelectProject.png "Select project")
 3. Podaj nazwę projektu i ewentualnie dodaj nazwę organizacji
    ![Select page](./assets/GoogleCloudNewProject.png "New project")
-4. Kliknij **Create** (utwórz)
+4. Kliknij **Utwórz** (Create)
 
 ---
 
-# 2. Włączenie Google OAuth API
+# 2. Włączenie Google OAuth API i konfiguracja projektu
 
 Przejdź na [stronę protokołu OAuth](https://console.cloud.google.com/auth/overview):
 ![Select page](./assets/GoogleCloudOAuth.png "OAuth")
 
-Następnie kliknij **Get started** (Rozpocznij):
-
----
-
-# 3. Konfiguracja projektu
+Następnie kliknij **Rozpocznij** (Get started):
 
 ![Select page](./assets/GoogleCloudOAuthConfig.png "OAuth config")
 
 ## Uzupełnij pola
 
-### App information (Informacje o aplikacji)
+### Informacje o aplikacji (App information)
 
-**App name** (Nazwa aplikacji)\
-**User Support email** (Adres e-mail dla użytkowników potrzebujących pomocy)
+**Nazwa aplikacji** (App name)\
+**Adres e-mail dla użytkowników potrzebujących pomocy** (User Support email)
 
-### Audience (Odbiorcy)
+### Odbiorcy (Audience)
 
-**External** (Z zewnątrz)
+**Z zewnątrz** (External), by dowolny użytkownik mógł się zalogować do naszej alpikacji.
 
-### Contact information (Dane kontaktowe)
+### Dane kontaktowe (Contact information)
 
-**Email addresses** (Adresy e-mail)
+**Adresy e-mail** (Email addresses)
 
-### Finish (Zakończ)
+### Zakończ (Finish)
 
-**Agree to user data policy** (Zaakceptuj zasady użytkowania)
+**Zaakceptuj zasady użytkowania** (Agree to user data policy)
 
-Na koniec kliknij **Create** (Utwórz)
+Na koniec kliknij **Utwórz** (Create)
 
 ---
-
-# 4. Utworzenie OAuth Client ID
 
 Zostaniesz przeniesiony na stronę [protokołu OAuth](https://console.cloud.google.com/auth/overview)
 ![Select page](./assets/GoogleCloudOAuthOverview.png "OAuth overview")
 
-## Kroki
-
-1. Kliknij **Create OAuth client** (Utwórz klienta OAuth):
-2. **Create OAuth client ID** (Utwórz identyfikator klienta OAuth)
+1. Kliknij **Utwórz klienta OAuth** (Create OAuth client):
+2. **Utwórz identyfikator klienta OAuth** (Create OAuth client ID)
    ![Select page](./assets/GoogleCloudOauthConfigId.png "OAuth overview")
-W tym przypadku należy wybrać **Web app** (Aplikacja internetowa)
+W tym przypadku należy wybrać **Aplikacja internetowa** (Web app)
 
 ---
 
 # 5. Dodanie Redirect URI
 
-## Authorized JavaScript origins (Autoryzowane źródła JavaScriptu)
+## Autoryzowane źródła JavaScriptu (Authorized JavaScript origins)
 
 Dodaj:
 
@@ -85,7 +81,7 @@ Dodaj:
 https://adres:Port
 ```
 
-## Authorized redirect URIs (Autoryzowane identyfikatory URI przekierowania)
+## Autoryzowane identyfikatory URI przekierowania (Authorized redirect URIs)
 
 Dodaj:
 
@@ -145,7 +141,7 @@ dotnet user-secrets set "Authentication:Google:ClientSecret" "YOUR_CLIENT_SECRET
 
 ---
 
-# 8. Najczęstsze błędy
+# 8. Najczęstsze błędy podczas działania aplikacji związane z Google OAuth API
 
 ---
 
@@ -198,4 +194,4 @@ app.UseHttpsRedirection();
 
 # 9. Usuwanie aplikacji
 
-Przejdź na [stronę zarządzania zasobami](https://console.cloud.google.com/auth/overview) zaznacz wybrany projekt i usuń go.
+Przejdź na [stronę zarządzania zasobami](https://console.cloud.google.com/cloud-resource-manager) zaznacz wybrany projekt i usuń go.
