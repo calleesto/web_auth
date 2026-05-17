@@ -6,16 +6,19 @@
     <link rel="stylesheet" href="login.css">
 </head>
 <body>
-<!-- todo create global css for header-->
     <header class="header">
         <h1 class="title">web_auth</h1>
-<!--        <button id="logInOrOutBtn" onClick="loginButtonLogic()">Log In</button>-->
     </header>
-<!--    <h1>Login</h1>-->
-<!--    <input type="text" id="username" placeholder="Username">-->
-<!--    <input type="password" id="password" placeholder="Password">-->
-<!--    <button onclick="login()">Login</button>-->
-<!--    <button onclick="google()">Login via Google</button>-->
+    <main id="login-container">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit" id="standard-login-btn">Sign in</button>
+        <p id="login-error-message" style="color: red;"></p>
+
+        <span>OR</span>
+
+        <button type="button" id="google-login-btn">Google</button>
+    </main>
     <script src="login.js"></script>
 </body>
 </html>
