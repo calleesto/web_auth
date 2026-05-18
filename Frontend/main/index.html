@@ -19,17 +19,17 @@
             <h2>Public Data</h2>
             <p class="section-description">Information available without logging in.</p>
             <ul>
-                <li></li> <!-- public value 1-->
-                <li></li> <!-- public value 2-->
+                <li id="value1"></li><!-- public value 1-->
+                <li id="value2"></li> <!-- public value 2-->
             </ul>
         </section>
 
         <section id="profileFetcher"> <!-- admins can fetch all ids; regular users only their own-->
             <h2>Fetch Profile</h2>
             <p class="section-description">Enter a user ID to view profile information.</p>
-            <input type="number" min="0" step="1" placeholder="Enter user ID" id="idFetchInput" required>
-            <button id="getProfile">Get Profile</button>
-            <p id="fetchOutput" class="output"></p> <!--shows either profile info json or 403 forbidden error-->
+            <input type="number" min="0" step="1" placeholder="Enter user ID" id="get-profile-input" required>
+            <button id="get-profile-btn">Get Profile</button>
+            <p id="get-profile-output" class="output"></p> <!--shows either profile info json or 403 forbidden error-->
         </section>
 
         <!--Test: "DELETE /api/user/{id}"-->
