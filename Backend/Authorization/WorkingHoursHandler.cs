@@ -21,7 +21,7 @@ public class WorkingHoursHandler : AuthorizationHandler<WorkingHoursRequirement>
         int startHour = _configuration.GetValue<int>("ABACSettings:StartHour");
         int endHour = _configuration.GetValue<int>("ABACSettings:EndHour");
 
-        int now = DateTime.Now.Hour;
+        int now = DateTime.UtcNow.Hour;
 
         if (now >= startHour && now <= endHour)
         {

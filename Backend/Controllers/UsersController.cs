@@ -1,7 +1,9 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using UserService;
+using LoginRequest = UserService.LoginRequest;
 
 namespace Backend.Controllers;
 
@@ -68,17 +70,69 @@ public class UsersController : ControllerBase
         
         string token = _tokenService.GenerateToken(user);
         
+        string refreshToken = _tokenService.GenerateRefreshToken();
+        
         _loggedUsers.RegisterLogin(user);
+        
+        inMemoryDatabase.RefreshTokens.Add(new RefreshToken
+        {
+            ExpiryDate = DateTime.UtcNow.AddDays(7),
+            Token = refreshToken,
+            UserId = user.Id,
+            IsRevoked = false
+        });
 
-        return Ok(new { token });
+        return Ok(new
+        {
+            token,
+            refreshToken
+        });
     }
     
     [HttpPost("logout")]
-    public IActionResult Logout()
+    public IActionResult Logout([FromBody] RefreshRequest request)
     {
         string userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         _loggedUsers.RegisterLogout(int.Parse(userId));
         
+        RefreshToken? token = inMemoryDatabase.RefreshTokens.FirstOrDefault(x => x.Token == request.RefreshToken);
+
+        if (token != null)
+        {
+            token.IsRevoked = true;
+        }
+        
         return Ok();
+    }
+
+    [AllowAnonymous]
+    [HttpPost("refresh")]
+    public IActionResult Refresh([FromBody] RefreshRequest request)
+    {
+        RefreshToken? storedToken = inMemoryDatabase.RefreshTokens.FirstOrDefault(x => x.Token == request.RefreshToken);
+
+        if (storedToken == null || storedToken.IsRevoked || storedToken.ExpiryDate < DateTime.UtcNow)
+        {
+            return Unauthorized();
+        }
+
+        User user = inMemoryDatabase.GetUserById(storedToken.UserId);
+
+        string newAccessToken = _tokenService.GenerateToken(user);
+        storedToken.IsRevoked = true;
+        string newRefreshToken = _tokenService.GenerateRefreshToken();
+        inMemoryDatabase.RefreshTokens.Add( new RefreshToken
+        {
+            ExpiryDate = storedToken.ExpiryDate,
+            Token = newRefreshToken,
+            UserId = user.Id,
+            IsRevoked = false
+        });
+
+        return Ok(new
+        {
+            accessToken = newAccessToken,
+            refreshToken = newRefreshToken
+        });
     }
 }

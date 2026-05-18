@@ -13,14 +13,14 @@ public class GoogleAuthController : ControllerBase
     private readonly TokenService _tokenService;
     private readonly InMemoryDatabase inMemoryDatabase;
     private readonly LoggedUsers _loggedUsers;
-    
+
     public GoogleAuthController(TokenService tokenService, InMemoryDatabase inMemoryDatabase, LoggedUsers loggedUsers)
     {
         _tokenService = tokenService;
         this.inMemoryDatabase = inMemoryDatabase;
         _loggedUsers = loggedUsers;
     }
-    
+
     [HttpGet("login-google")]
     public IActionResult LoginGoogle()
     {
@@ -53,13 +53,25 @@ public class GoogleAuthController : ControllerBase
         {
             user = inMemoryDatabase.CreateGoogleUser(name, email);
         }
+
         _loggedUsers.RegisterLogin(user);
 
-        string jwt = _tokenService.GenerateToken(user);
+        string token = _tokenService.GenerateToken(user);
+
+        string refreshToken = _tokenService.GenerateRefreshToken();
+        
+        inMemoryDatabase.RefreshTokens.Add(new RefreshToken
+        {
+            ExpiryDate = DateTime.UtcNow.AddDays(7),
+            Token = refreshToken,
+            UserId = user.Id,
+            IsRevoked = false
+        });
 
         return Ok(new
         {
-            token = jwt
+            token,
+            refreshToken
         });
     }
 }

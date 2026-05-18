@@ -3,6 +3,8 @@
 public class InMemoryDatabase
 {
     public List<User> Users { get; set; }
+    
+    public List<RefreshToken> RefreshTokens { get; set; } = [];
 
     public InMemoryDatabase()
     {
@@ -34,9 +36,7 @@ public class InMemoryDatabase
     
     public User GetUserById(int id)
     {
-        User user = Users.First(user => user.Id == id);
-        user.Password = "";
-        return user;
+        return Users.First(user => user.Id == id);
     }
 
     public User? GetUserByEmail(string email)

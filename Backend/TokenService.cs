@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using UserService;
@@ -16,13 +17,14 @@ public class TokenService
     {
         _config = config;
         _secretKey = _config["ApiSettings:Secret"];
-        _accessTokenExpiryMinutes = _config.GetValue("ApiSettings:AccessTokenExpiryMinutes", 60);
+        _accessTokenExpiryMinutes = _config.GetValue("ApiSettings:AccessTokenExpiryMinutes", 15);
     }
 
     public string GenerateToken(User user)
     {
         List<Claim> claims =
         [
+            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Name, user.Name),
             new (ClaimTypes.Email, user.Email)
@@ -41,10 +43,20 @@ public class TokenService
             issuer: _config["ApiSettings:Issuer"],
             audience: _config["ApiSettings:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(_accessTokenExpiryMinutes),
+            expires: DateTime.UtcNow.AddMinutes(_accessTokenExpiryMinutes),
             signingCredentials: creds
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+    
+    public string GenerateRefreshToken()
+    {
+        byte[] randomNumber = new byte[64];
+
+        using RandomNumberGenerator rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+
+        return Convert.ToBase64String(randomNumber);
     }
 }
