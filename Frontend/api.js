@@ -1,7 +1,4 @@
-// todo fix import should
-//import { BackAddress } from "common"
-
-const BackAddress = "http://localhost:9002"
+import { BackAddress, FrontAddress} from "common.js"
 
 async function logout() {
     let token = localStorage.getItem("token");
@@ -32,6 +29,39 @@ async function getPublic() {
 async function showPublic() {
     let response = await getPublic();
     console.log(response);
-    let data = document.getElementById('data');
-    data.innerText = response;
+    let v1 = document.getElementById('value1');
+    let v2 = document.getElementById('value2');
+    v1.innerText = response[0];
+    v2.innerText = response[1];
 }
+
+async function adminGetProfile() {
+    let input = document.getElementById('get-profile-input');
+    let output = document.getElementById('get-profile-output');
+    let token = localStorage.getItem("token");
+
+    output.innerText = "";
+    try {
+        const response = await fetch(`${BackAddress}/api/user/${input.value}`, {
+            method: 'GET',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+        });
+        if (response.status === 403) {
+            output.innerText = "Forbidden. You are not an admin ad tried lookig at someone else's profile.";
+        }
+        else if (response.ok) {
+            const data = await response.json();
+            output.innerText = JSON.stringify(data);
+        }
+        else if (response.status === 404) {
+            output.innerText = "User not found.";
+        }
+    }
+    catch (error) {
+        output.innerText = error.message;
+    }
+}
+document.getElementById("get-profile-btn").addEventListener("click", adminGetProfile);
