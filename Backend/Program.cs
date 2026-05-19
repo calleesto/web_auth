@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
     .AddJwtBearer("Bearer", options =>
     {
@@ -69,11 +69,12 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<InMemoryDatabase>();
 
 WebApplication app = builder.Build();
-app.MapControllers();
+
 
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
