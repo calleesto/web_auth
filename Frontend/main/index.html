@@ -24,6 +24,7 @@
             </ul>
         </section>
 
+        <!--Test: "GET /api/user/{id}"-->
         <section id="profileFetcher"> <!-- admins can fetch all ids; regular users only their own-->
             <h2>Fetch Profile</h2>
             <p class="section-description">Enter a user ID to view profile information.</p>
@@ -36,9 +37,9 @@
         <section id="adminDelete">
             <h2>Delete User</h2>
             <p class="section-description">Admin-only action for removing a user profile.</p>
-            <input type="number" min="0" step="1" placeholder="Enter user ID" id="idDeleteInput" required>
-            <button id="deleteProfile">Delete Profile</button>
-            <p id="deleteOutput" class="output"></p> <!--shows either profile delete success message or 403 forbidden error-->
+            <input type="number" min="0" step="1" placeholder="Enter user ID" id="delete-profile-input" required>
+            <button id="delete-profile-btn">Delete Profile</button>
+            <p id="delete-profile-output" class="output"></p> <!--shows either profile delete success message or 403 forbidden error-->
         </section>
 
         <!--Test: "POST /api/logs"-->

@@ -35,33 +35,58 @@ async function showPublic() {
     v2.innerText = response[1];
 }
 
-async function adminGetProfile() {
-    let input = document.getElementById('get-profile-input');
-    let output = document.getElementById('get-profile-output');
+async function profileControl(method, inputId, outputId) {
+    let input = document.getElementById(inputId);
+    let output = document.getElementById(outputId);
     let token = localStorage.getItem("token");
+    let url = BackAddress + "/api/user/" + input.value;
 
     output.innerText = "";
+
     try {
-        const response = await fetch(`${BackAddress}/api/user/${input.value}`, {
-            method: 'GET',
+        const response = await fetch(url, {
+            method: method,
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             }
         });
+
         if (response.status === 403) {
-            output.innerText = "Forbidden. You are not an admin ad tried lookig at someone else's profile.";
-        }
-        else if (response.ok) {
-            const data = await response.json();
-            output.innerText = JSON.stringify(data);
+            output.innerText = "Forbidden. You are not allowed to do this.";
         }
         else if (response.status === 404) {
             output.innerText = "User not found.";
+        }
+        else if (response.ok) {
+            if (method === "GET") {
+                const data = await response.json();
+                output.innerText = JSON.stringify(data);
+            }
+            else if (method === "DELETE") {
+                output.innerText = "User deleted successfully.";
+            }
+        }
+        else {
+            output.innerText = "Something went wrong.";
         }
     }
     catch (error) {
         output.innerText = error.message;
     }
 }
-document.getElementById("get-profile-btn").addEventListener("click", adminGetProfile);
+
+function getProfile() {
+    profileControl("GET", "get-profile-input", "get-profile-output");
+}
+
+function deleteProfile() {
+    profileControl("DELETE", "delete-profile-input", "delete-profile-output");
+}
+
+async function submitLogs() {
+
+}
+
+document.getElementById("delete-profile-btn").addEventListener("click", deleteProfile)
+document.getElementById("get-profile-btn").addEventListener("click", getProfile);
