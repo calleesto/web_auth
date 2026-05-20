@@ -8,7 +8,6 @@ async function getPublic() {
 
 async function showPublic() {
     let response = await getPublic();
-    console.log(response);
     let v1 = document.getElementById('value1');
     let v2 = document.getElementById('value2');
     v1.innerText = response[0];

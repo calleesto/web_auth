@@ -2,6 +2,8 @@
 
 public class InMemoryDatabase
 {
+    private int _nextId = 1;
+    
     public List<User> Users { get; set; }
     
     public List<RefreshToken> RefreshTokens { get; set; } = [];
@@ -10,12 +12,14 @@ public class InMemoryDatabase
     {
         Users = [
             new User(
+                _nextId++,
                 "Bartek",
                 "bartus@email.com",
                 "Password",
                 ["admin", "user"]
             ),
             new User (
+                _nextId++,
                 "Aneta",
                 "anetka@email.com",
                 "haslo",
@@ -58,6 +62,7 @@ public class InMemoryDatabase
     public User CreateGoogleUser(string name, string email)
     {
         User user = new (
+            _nextId++,
             name,
             email,
             "",

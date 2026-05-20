@@ -64,9 +64,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddSingleton<IAuthorizationHandler, UserOrAdminHandler>();
 builder.Services.AddSingleton<IAuthorizationHandler, WorkingHoursHandler>();
 builder.Services.AddSingleton<LoggedUsers>();
-
-builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<InMemoryDatabase>();
+builder.Services.AddSingleton<TokenService>();
+builder.Services.AddSingleton<InMemoryDatabase>();
 
 WebApplication app = builder.Build();
 

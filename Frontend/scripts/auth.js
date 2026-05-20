@@ -35,7 +35,8 @@ async function login() {
         } )
         .then( response => {
             localStorage.setItem("token", response.token);
-            window.location.href = FrontAddress + "/main/index.html";
+            localStorage.setItem("refreshToken", response.refreshToken);
+            window.location.href = FrontAddress + "/index.html";
         } )
         .catch( error => {
             errorMessage.textContent = error.message;
@@ -44,20 +45,51 @@ async function login() {
 
 export async function logout() {
     let token = localStorage.getItem("token");
-    if (token) {
+    let refreshToken = localStorage.getItem("refreshToken");
+    if (token && refreshToken) {
         let url = BackAddress + "/api/logout"
         const options = {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": token
-            }
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "RefreshToken": refreshToken
+            } )
+        };
+        fetch( url, options )
+            .then( response => {
+                localStorage.removeItem("token");
+                localStorage.removeItem("refreshToken");
+            } );
+    }
+}
+
+export async function refresh(){
+    let token = localStorage.getItem("token");
+    let refreshToken = localStorage.getItem("refreshToken");
+    if (token && refreshToken) {
+        let url = BackAddress + "/api/refresh"
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                "RefreshToken": refreshToken
+            } )
         };
         fetch( url, options )
             .then( response => response.json() )
             .then( response => {
                 console.log( response );
-                localStorage.removeItem("token");
+                localStorage.setItem("token", response.token);
+                localStorage.setItem("refreshToken", response.refreshToken);
+            })
+            .catch( error => {
+                errorMessage.textContent = error.message;
             } );
     }
 }

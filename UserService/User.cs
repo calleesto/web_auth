@@ -2,8 +2,6 @@
 
 public class User
 {
-    private static int id = 1;
-    
     public int Id { get; set; }
     
     public string Name { get; set; }
@@ -14,9 +12,9 @@ public class User
     
     public List<string> Roles { get; set; }
 
-    public User(string name, string email, string password, List<string> roles)
+    public User(int id, string name, string email, string password, List<string> roles)
     {
-        Id = id++;
+        Id = id;
         Name = name;
         Email = email;
         Password = BCrypt.Net.BCrypt.HashPassword(password);
