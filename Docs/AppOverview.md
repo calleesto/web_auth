@@ -221,7 +221,17 @@ Przykładowa konfiguracja:
 ---
 
 # 5. Uruchomienie aplikacji
-todo dokończyć
+
+## 1. Przejdź do katalogu głównego
+```bash
+cd web_auth
+```
+
+## 2. Uruchom docker compose
+
+```bash
+docker compose up -d
+```
 
 ---
 
