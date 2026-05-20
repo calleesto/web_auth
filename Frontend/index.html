@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <title>web_auth</title>
-    <link rel="stylesheet" href="index.css">
+
+    <link rel="stylesheet" href="style/common.css">
+
+    <link rel="stylesheet" href="style/index.css">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <!--Test: "POST /login" && "POST /logout" && "GET /auth/login-google" && "GET /auth/logout-google"-->
     <header class="header">
         <h1 class="title">web_auth</h1>
-        <button id="logInOrOutBtn" onClick="loginButtonLogic()">Log In</button>
+        <button id="login-btn">Log In</button>
     </header>
 
     <main class="main">
@@ -30,7 +34,7 @@
             <p class="section-description">Enter a user ID to view profile information.</p>
             <input type="number" min="0" step="1" placeholder="Enter user ID" id="get-profile-input" required>
             <button id="get-profile-btn">Get Profile</button>
-            <p id="get-profile-output" class="output"></p> <!--shows either profile info json or 403 forbidden error-->
+            <p id="get-profile-output" class="output"></p> <!--shows either profile info JSON or 403 forbidden error-->
         </section>
 
         <!--Test: "DELETE /api/user/{id}"-->
@@ -46,12 +50,29 @@
         <section id="submitLogs">
             <h2>Submit Logs</h2>
             <p class="section-description">Submit server logs if your account has permission.</p>
-            <button id="submitLogsBtn">Submit Logs</button>
-            <p id="logsOutput" class="output"></p> <!--must be admin and server hour between StartHour and EndHour or 403 forbidden error-->
+            <button id="submit-logs-btn">Submit Logs</button>
+            <p id="logs-output" class="output"></p> <!--must be admin and server hour between StartHour and EndHour or 403 forbidden error-->
         </section>
     </main>
 
-    <script src="index.js"></script>
-    <script src="api.js"></script>
+    <script type="module">
+        import { logout } from "./scripts/auth.js";
+
+        function loginBtnLogic() {
+            const btn = document.getElementById("login-btn");
+
+            const isLoggedIn = localStorage.getItem('token');
+            if (isLoggedIn) {
+                btn.innerHTML = "Log Out";
+                btn.onclick = () => logout();
+            } else {
+                btn.innerHTML = "Log In";
+                btn.onclick = () => { window.location.href = "login.html"; };
+            }
+        }
+
+        loginBtnLogic();
+    </script>
+    <script type="module" src="scripts/api.js"></script>
 </body>
 </html>

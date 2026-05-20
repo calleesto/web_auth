@@ -1,4 +1,4 @@
-import { FrontAddress, BackAddress } from "../common.js"
+import { FrontAddress, BackAddress } from "./common.js"
 
 async function login() {
     let login = document.getElementById('username');
@@ -42,9 +42,35 @@ async function login() {
         } );
 }
 
+export async function logout() {
+    let token = localStorage.getItem("token");
+    if (token) {
+        let url = BackAddress + "/api/logout"
+        const options = {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": token
+            }
+        };
+        fetch( url, options )
+            .then( response => response.json() )
+            .then( response => {
+                console.log( response );
+                localStorage.removeItem("token");
+            } );
+    }
+}
+
 function googleLogin() {
     window.location.href = BackAddress + "/auth/login-google";
 }
 
-document.getElementById("standard-login-btn").addEventListener("click", login);
-document.getElementById("google-login-btn").addEventListener("click", googleLogin);
+const standardLoginBtn = document.getElementById("standard-login-btn");
+const googleLoginBtn = document.getElementById("google-login-btn");
+if (standardLoginBtn) {
+    standardLoginBtn.addEventListener("click", login);
+}
+if (googleLoginBtn) {
+    googleLoginBtn.addEventListener("click", googleLogin);
+}
