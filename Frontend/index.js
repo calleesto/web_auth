@@ -7,6 +7,6 @@ function loginButtonLogic() {
         logout();
     } else {
         btn.innerHTML = "Log In";
-        window.location.href = "../login/login.html";
+        window.location.href = "login/login.html";
     }
 }
