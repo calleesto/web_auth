@@ -36,7 +36,8 @@ public class UsersController : ControllerBase
     [Authorize(Policy = "UserOrAdmin")]
     public IActionResult Get(int id)
     {
-        User user = inMemoryDatabase.GetUserById(id);
+        User? user = inMemoryDatabase.GetUserById(id);
+        if (user == null) return NotFound();
         UserDto userDto = new(user);
         return Ok(userDto);
     }
@@ -46,7 +47,8 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin")]
     public IActionResult Delete(int id)
     {
-        User user = inMemoryDatabase.GetUserById(id);
+        User? user = inMemoryDatabase.GetUserById(id);
+        if (user == null) return NotFound();
         inMemoryDatabase.DeleteUser(user);
         return NoContent();
     }

@@ -38,9 +38,9 @@ public class InMemoryDatabase
         return user;
     }
     
-    public User GetUserById(int id)
+    public User? GetUserById(int id)
     {
-        return Users.First(user => user.Id == id);
+        return Users.FirstOrDefault(user => user.Id == id);
     }
 
     public User? GetUserByEmail(string email)

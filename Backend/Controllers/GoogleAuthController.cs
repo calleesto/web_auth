@@ -68,10 +68,6 @@ public class GoogleAuthController : ControllerBase
             IsRevoked = false
         });
 
-        return Ok(new
-        {
-            token,
-            refreshToken
-        });
+           return Redirect($"http://localhost:9003/index.html?token={token}&refreshToken={refreshToken}");
     }
 }

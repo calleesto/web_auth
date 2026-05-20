@@ -1,5 +1,14 @@
 import { FrontAddress, BackAddress } from "./common.js"
 
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+const refreshToken = params.get("refreshToken");
+if (token && refreshToken) {
+    localStorage.setItem("token", token);
+    localStorage.setItem("refreshToken", refreshToken);
+    window.history.replaceState({}, "", "/index.html");
+}
+
 async function login() {
     let login = document.getElementById('username');
     let password = document.getElementById('password');
@@ -62,6 +71,7 @@ export async function logout() {
             .then( response => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("refreshToken");
+                window.location.reload(); 
             } );
     }
 }
