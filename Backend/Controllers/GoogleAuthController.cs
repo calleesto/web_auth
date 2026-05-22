@@ -13,12 +13,14 @@ public class GoogleAuthController : ControllerBase
     private readonly TokenService _tokenService;
     private readonly InMemoryDatabase inMemoryDatabase;
     private readonly LoggedUsers _loggedUsers;
+    private readonly IConfiguration _configuration;
 
-    public GoogleAuthController(TokenService tokenService, InMemoryDatabase inMemoryDatabase, LoggedUsers loggedUsers)
+    public GoogleAuthController(TokenService tokenService, InMemoryDatabase inMemoryDatabase, LoggedUsers loggedUsers, IConfiguration configuration)
     {
         _tokenService = tokenService;
         this.inMemoryDatabase = inMemoryDatabase;
         _loggedUsers = loggedUsers;
+        _configuration = configuration;
     }
 
     [HttpGet("login-google")]
@@ -68,6 +70,6 @@ public class GoogleAuthController : ControllerBase
             IsRevoked = false
         });
 
-           return Redirect($"http://localhost:9003/index.html?token={token}&refreshToken={refreshToken}");
+        return Redirect($"{_configuration.GetValue<string>("ApiSettings:CorsOrigins")}/index.html?token={token}&refreshToken={refreshToken}");
     }
 }
