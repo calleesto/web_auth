@@ -195,3 +195,7 @@ app.UseHttpsRedirection();
 # 9. Usuwanie aplikacji
 
 Przejdź na [stronę zarządzania zasobami](https://console.cloud.google.com/cloud-resource-manager) zaznacz wybrany projekt i usuń go.
+
+---
+
+W dalszym kroku przeczytaj [GoogleAuth.md](./GoogleAuth.md)
