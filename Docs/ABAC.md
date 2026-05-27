@@ -6,6 +6,13 @@ W tym poradniku dowiesz się czym jest ABAC i jak go zaimplementować.
 
 ---
 
+# Wymagania
+
+- Warto uprzednio przeczytać poradnik [README.md](./README.md)
+- Projekt ASP.NET Core
+
+---
+
 # 1. Wprowadzenie
 
 ABAC (*Attribute-Based Access Control*) to mechanizm kontroli dostępu oparty o atrybuty użytkownika, zasobu oraz kontekstu żądania.

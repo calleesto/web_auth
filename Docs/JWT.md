@@ -6,6 +6,13 @@ W tym poradniku dowiesz się czym jest RBAC i jak go zaimplementować.
 
 ---
 
+# Wymagania
+
+- Warto uprzednio przeczytać poradnik [README.md](./README.md)
+- Projekt ASP.NET Core
+
+---
+
 # 1. Wprowadzenie
 
 JWT (*JSON Web Token*) to standard służący do bezpiecznego przekazywania informacji pomiędzy klientem a serwerem w postaci podpisanego tokenu.
